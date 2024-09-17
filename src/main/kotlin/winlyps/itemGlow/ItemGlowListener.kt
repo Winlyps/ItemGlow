@@ -4,6 +4,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerItemHeldEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -20,6 +21,17 @@ class ItemGlowListener(private val plugin: Plugin) : Listener {
 
         handleItemGlow(itemInMainHand, event.isSneaking)
         handleItemGlow(itemInOffHand, event.isSneaking)
+    }
+
+    @EventHandler
+    fun onPlayerItemHeld(event: PlayerItemHeldEvent) {
+        val player: Player = event.player
+
+        // Check if the player is sneaking
+        if (player.isSneaking) {
+            // Cancel the event to prevent the player from switching items
+            event.isCancelled = true
+        }
     }
 
     private fun handleItemGlow(item: ItemStack?, isSneaking: Boolean) {
