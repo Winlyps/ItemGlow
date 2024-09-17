@@ -27,12 +27,20 @@ class ItemGlowListener(private val plugin: Plugin) : Listener {
             val itemMeta: ItemMeta? = it.itemMeta
 
             if (isSneaking) {
+                // Check if the item already has any enchantments
+                if (itemMeta?.hasEnchants() == true) {
+                    // Item already has enchantments, do nothing
+                    return
+                }
+
                 // Add the glowing effect
                 itemMeta?.addEnchant(Enchantment.ARROW_INFINITE, 1, true)
                 itemMeta?.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS)
             } else {
-                // Remove the glowing effect
-                itemMeta?.removeEnchant(Enchantment.ARROW_INFINITE)
+                // Remove the glowing effect if it was previously added
+                if (itemMeta?.hasEnchant(Enchantment.ARROW_INFINITE) == true) {
+                    itemMeta.removeEnchant(Enchantment.ARROW_INFINITE)
+                }
             }
 
             it.itemMeta = itemMeta
